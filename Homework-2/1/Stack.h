@@ -68,7 +68,7 @@ void Stack<T>::push(T object)
 template<class T>
 T Stack<T>::top()
 {
-	return backend[pointer];
+	return backend[pointer - 1];
 }
 
 template<class T>
@@ -80,7 +80,7 @@ int Stack<T>::size()
 template<class T>
 bool Stack<T>::empty()
 {
-	return (pointer == 0);
+	return(pointer == 0);
 }
 
 template<class T>
