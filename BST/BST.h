@@ -1,5 +1,4 @@
-#ifndef BST_H
-#define BST_H
+#pragma once
 
 #include <cstdlib>
 #include <iostream>
@@ -112,4 +111,3 @@ void BST<T>::inorder(typename BST<T>::Node* start){
 	}
 }
 
-#endif
