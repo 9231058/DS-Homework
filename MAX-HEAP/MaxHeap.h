@@ -21,7 +21,7 @@ MaxHeap<T>::MaxHeap(int capacity = 10){
 	if(capacity < 1) throw std::invalid_argument("Capacity must be >= 1");
 	mCapacity = capacity;
 	mHeapSize = 0;
-	mHeap = new T[capacity];
+	mHeap = new T[capacity + 1];
 }
 
 template<typename T>
@@ -31,22 +31,22 @@ bool MaxHeap<T>::isEmpty(){
 
 template<typename T>
 const T& MaxHeap<T>::top(){
-	return mHeap[0];
+	return mHeap[1];
 }
 
 template<typename T>
 void MaxHeap<T>::push(const T& input){
 	if(mHeapSize == mCapacity){
-		T* newHeap = new T[mCapacity * 2];
-		for(int i = 0; i < mHeapSize; i++){
+		T* newHeap = new T[mCapacity * 2 + 1];
+		for(int i = 1; i <= mHeapSize; i++){
 			newHeap[i] = mHeap[i];
 		}
 		mHeap = newHeap;
 		mCapacity *= 2;
 	}
 
-	int current = mHeapSize++;
-	while(current != 0 && mHeap[current / 2] < input){
+	int current = ++mHeapSize;
+	while(current != 1 && mHeap[current / 2] < input){
 		mHeap[current] = mHeap[current / 2];
 		current /= 2;
 	}
@@ -60,8 +60,8 @@ void MaxHeap<T>::pop(){
 	T last = mHeap[mHeapSize];
 	mHeapSize--;
 
-	int current = 0;
-	int child = 1;
+	int current = 1;
+	int child = 2;
 	while(child <= mHeapSize){
 		if(child < mHeapSize && mHeap[child] < mHeap[child + 1]) child++;
 
