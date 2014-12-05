@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Fri 05 Dec 2014 05:38:17 PM IRST
+// * Last Modified : Fri 05 Dec 2014 11:32:19 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -29,12 +29,7 @@ private:
 
 		//virtual ~Node();
 	private:
-		bool bType;	//True: List pointer, False: Data holder
-		union{
-			T mData;
-			List<T> mLink;
-		} mObject;
-
+		T mObject;
 		Node* mNext;
 		Node* mBack;
 	};
@@ -89,16 +84,7 @@ public:
 
 template<class T>
 List<T>::Node::Node(const T& object){
-	mObject.mData = T(object);
-	bType = false;
-	mNext = NULL;
-	mBack = NULL;
-}
-
-template<class T>
-List<T>::Node::Node(const List<T>& link){
-	mObject.mLink = link;
-	bType = true;
+	mObject = T(object);
 	mNext = NULL;
 	mBack = NULL;
 }
@@ -125,11 +111,7 @@ void List<T>::Node::setBack(Node* back){
 
 template<class T>
 T& List<T>::Node::getObject(){
-	if(!bType){
-		return mObject.mData;
-	}else{
-		return NULL;
-	}
+	return mObject;
 }
 
 //===================================================

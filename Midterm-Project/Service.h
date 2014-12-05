@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Fri 05 Dec 2014 10:15:12 PM IRST
+// * Last Modified : Sat 06 Dec 2014 12:39:07 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -21,16 +21,16 @@ class Service{
 		int mRunTime;
 		int mCost;
 	public:
-		std::string getName();
+		std::string getName() const;
 		void setName(std::string name);
-		std::string getModel();
+		std::string getModel() const;
 		void setModel(std::string model);
-		std::string getCostumerComment();
+		std::string getCostumerComment() const;
 		void setCostumerComment(std::string costumerComment);
-		std::string getTechnicalComment();
+		std::string getTechnicalComment() const;
 		void setTechnicalComment(std::string technicalComment);
-		int getRunTime();
+		int getRunTime() const;
 		void setRunTime(int runTime);
-		int getCost();
+		int getCost() const;
 		void setCost(int cost);
 };
