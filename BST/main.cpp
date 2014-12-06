@@ -14,6 +14,15 @@ int main(int argc, char* argv[]){
 	ints.insert(1);
 	ints.insert(32);
 	ints.insert(2);
+	
+	cout << "----------------------------------------" << endl;
 	ints.inorder();
+
+	cout << "----------------------------------------" << endl;
 	cout << ints.sup(2) << endl;
+	
+	ints.remove(10);
+	
+	cout << "----------------------------------------" << endl;
+	ints.inorder();
 }

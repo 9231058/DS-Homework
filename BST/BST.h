@@ -33,6 +33,7 @@ class BST{
 
 		void remove(const T& object);
 		void insert(const T& object);
+		const Node* find(const T& object);
 		const T& sup(const T& object);
 		void inorder();
 };
@@ -165,19 +166,57 @@ void BST<T>::remove(const T& object){
 	
 	Node* x = root;
 	Node* y = NULL;
+	bool isLeft = false;
 	while(x != NULL){
-		y = x;
+		if(x->getObject() < object){
+			y = x;
+			x = x->getRight();
+			isLeft = false;
+		}else if(x->getObject() == object){
+			break;
+		}else{
+			y = x;
+			x = x->getLeft();
+			isLeft = true;
+		}
+	}
+	if(x->getObject() == object){
+		if(!x->getRight() && !x->getLeft()){
+				delete x;
+				if(y != NULL){
+					(isLeft) ? y->setLeft(NULL) : y->setRight(NULL);
+				}
+		}else if(!x->getRight() && x->getLeft()){
+			if(y != NULL){
+				(isLeft) ? y->setLeft(x->getLeft()) : y->setRight(x->getLeft());
+			}
+			delete x;
+		}else if(x->getRight() && !x->getLeft()){
+			if(y != NULL){
+				(isLeft) ? y->setLeft(x->getRight()) : y->setRight(x->getRight());
+			}
+			delete x;
+		}else{
+			T sup_value = sup(x->getObject());
+			remove(sup_value);
+			x->setObject(sup_value);
+		}
+	}
+}
+
+template<class T>
+const typename BST<T>::Node* BST<T>::find(const T& object){
+	Node* x = root;
+	while(x != NULL){
 		if(x->getObject() < object){
 			x = x->getRight();
+		}else if(x->getObject == object){
+			return x;
 		}else{
 			x = x->getLeft();
 		}
 	}
-	if(y->getObject() == object){
-		if(!y->getRight() || !y->getLeft()){
-			
-		}
-	}
+	return NULL;
 }
 
 template<class T>
