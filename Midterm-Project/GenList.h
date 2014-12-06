@@ -1,10 +1,10 @@
 // In The Name Of God
 // ========================================
-// * File Name : List.h
+// * File Name : GenList.h
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Sat 06 Dec 2014 10:21:59 PM IRST
+// * Last Modified : Sun 07 Dec 2014 01:00:10 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -14,39 +14,39 @@
 #include <iostream>
 
 template<class T>
-class List{
+class GenList{
 private:
 
 	class Node{
 	public:
 		Node(const T& object);
+		Node(const Node* link);
 
 		Node* getNext();
-		Node* getBack();
 		void setNext(Node* next);
-		void setBack(Node* back);
-		T& getObject();
+		bool getTag();
+		T& getData();
+		Node* getLink();
 
 		//virtual ~Node();
 	private:
-		T mObject;
+		bool bTag;	// True = data, False = link
+		T mData;
+		Node* mLink;
 		Node* mNext;
-		Node* mBack;
 	};
 
 	int mSize;
 	Node* mStart;
-	Node* mFinish;
 
 public:
 	List();
 	List(const List<T> &orig);
 	List<T>& operator=(const List<T> &orig);
 
-	void push_back(const T& object);
 	void push_front(const T& object);
+	void push_front(const Node* link);
 	void pop_front();
-	void pop_back();
 	T& front();
 	T& back();
 	typename List<T>::Iterator begin();
@@ -84,9 +84,16 @@ public:
 
 template<class T>
 List<T>::Node::Node(const T& object){
-	mObject = T(object);
+	mData = T(object);
+	bTag = true;
 	mNext = NULL;
-	mBack = NULL;
+}
+
+template<class T>
+List<T>::Node::Node(const Node* link){
+	mLink = link;
+	bTag = false;
+	mNext = NULL;
 }
 
 template<class T>
@@ -95,23 +102,18 @@ typename List<T>::Node *List<T>::Node::getNext(){
 }
 
 template<class T>
-typename List<T>::Node *List<T>::Node::getBack(){
-	return mBack;
-}
-
-template<class T>
 void List<T>::Node::setNext(Node* next){
 	mNext = next;
 }
 
 template<class T>
-void List<T>::Node::setBack(Node* back){
-	mBack = back;
+T& List<T>::Node::getData(){
+	return mData;
 }
 
 template<class T>
-T& List<T>::Node::getObject(){
-	return mObject;
+Node* List<T>::Node::getLink(){
+	return mLink;
 }
 
 //===================================================
@@ -194,59 +196,37 @@ bool List<T>::Iterator::operator!=(const Iterator &origin){
 template<class T>
 List<T>::List(){
 	mStart = NULL;
-	mFinish = NULL;
 	mSize = 0;
 }
 
 template<class T>
 List<T>::List(const List<T>& orig){
-	mStart = NULL;
-	mFinish = NULL;
-	mSize = 0;
-
-	for(int i = 0; i < orig.size(); i++){
-		this->push_back(orig[i]);
-	}
+	// TODO Implement list copying
 }
 
 template<class T>
 List<T>& List<T>::operator=(const List<T>& orig){
-	mStart = NULL;
-	mFinish = NULL;
-	mSize = 0;
-
-	for(int i = 0; i < orig.size(); i++){
-		this->push_back(orig[i]);
-	}
-
-	return *this;
+	// TODO Implement list assignment
 }
 
 template<class T>
 T& List<T>::front(){
-	if(mStart == NULL){
-		throw(new std::invalid_argument("List is empty"));
-	}
-	return mStart->getObject();
+	// Not yet supported
 }
 
 template<class T>
 T& List<T>::back(){
-	if(mFinish == NULL){
-		throw(new std::invalid_argument("List is empty"));
-	}
-	return mFinish->getObject();
+	// Not yet supported
 }
 
 template<class T>
 typename List<T>::Iterator List<T>::begin(){
-	return Iterator(mStart, mStart, mFinish);
+	// Not yet supported
 }
 
 template<class T>
-typename List<T>::Iterator List<T>::end()
-{
-	return Iterator(mFinish, mStart, mFinish);
+typename List<T>::Iterator List<T>::end(){
+	// Not yet supported
 }
 
 template<class T>
@@ -255,30 +235,26 @@ void List<T>::push_front(const T& object){
 
 	if(mStart == NULL){
 		mStart = new Node(object);
-		mFinish = mStart;
 		return;
 	}
 
 	Node* new_node = new Node(object);
-	mStart->setBack(new_node);
 	new_node->setNext(mStart);
 	mStart = new_node;
 }
 
 template<class T>
-void List<T>::push_back(const T& object){
+void List<T>::push_front(const Node* link){
 	mSize++;
 
 	if(mStart == NULL){
-		mStart = new Node(object);
-		mFinish = mStart;
+		mStart = new Node(link);
 		return;
 	}
 
-	Node* new_node = new Node(object);
-	mFinish->setNext(new_node);
-	new_node->setBack(mFinish);
-	mFinish = new_node;
+	Node* new_node = new Node(link);
+	new_node->setNext(mStart);
+	mStart = new_node;
 }
 
 template<class T>
@@ -296,24 +272,6 @@ void List<T>::pop_front(){
 
 	if(mStart == NULL)
 		mFinish = NULL;
-}
-
-template<class T>
-void List<T>::pop_back(){
-	if (mFinish == NULL) {
-		return;
-	}
-
-	mSize--;
-
-	Node* inner_back = mFinish;
-	mFinish = mFinish->getBack();
-	mFinish->setNext(NULL);
-	delete(inner_back);
-
-	if(mFinish == NULL)
-		mStart = NULL;
-
 }
 
 template<class T>
