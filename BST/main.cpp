@@ -1,3 +1,13 @@
+// In The Name Of God
+// ========================================
+// * File Name : main.cpp
+// 
+// * Creation Date : 06-12-2014
+//
+// * Last Modified : Sat 06 Dec 2014 06:13:48 PM IRST
+//
+// * Created By : Parham Alvani (parham.alvani@gmail.com)
+// =======================================
 #include <cstdlib>
 #include <iostream>
 #include "BST.h"

@@ -1,3 +1,13 @@
+// In The Name Of God
+// ========================================
+// * File Name : BST.h
+// 
+// * Creation Date : 06-12-2014
+//
+// * Last Modified : Sat 06 Dec 2014 06:13:08 PM IRST
+//
+// * Created By : Parham Alvani (parham.alvani@gmail.com)
+// =======================================
 #pragma once
 
 #include <cstdlib>
