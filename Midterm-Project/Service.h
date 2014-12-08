@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Sat 06 Dec 2014 12:39:07 AM IRST
+// * Last Modified : Mon 08 Dec 2014 08:54:29 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -33,4 +33,5 @@ class Service{
 		void setRunTime(int runTime);
 		int getCost() const;
 		void setCost(int cost);
+
 };

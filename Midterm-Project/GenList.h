@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Sun 07 Dec 2014 01:00:10 AM IRST
+// * Last Modified : Mon 08 Dec 2014 08:23:22 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -16,26 +16,6 @@
 template<class T>
 class GenList{
 private:
-
-	class Node{
-	public:
-		Node(const T& object);
-		Node(const Node* link);
-
-		Node* getNext();
-		void setNext(Node* next);
-		bool getTag();
-		T& getData();
-		Node* getLink();
-
-		//virtual ~Node();
-	private:
-		bool bTag;	// True = data, False = link
-		T mData;
-		Node* mLink;
-		Node* mNext;
-	};
-
 	int mSize;
 	Node* mStart;
 
@@ -58,6 +38,28 @@ public:
 	template<class V> friend std::ostream& operator<<(std::ostream &os, const List<V>& list);
 
 	virtual ~List();
+
+	class Node{
+	public:
+		Node(const T& object);
+		Node(const Node* link);
+
+		Node* getNext();
+		void setNext(Node* next);
+		bool getTag();
+		T& getData();
+		Node* getLink();
+		void decRef();
+		void incRef();
+
+		virtual ~Node();
+	private:
+		int mRef;
+		bool bTag;	// True = data, False = link
+		T mData;
+		Node* mLink;
+		Node* mNext;
+	};
 
 	class Iterator {
 	public:
@@ -84,6 +86,7 @@ public:
 
 template<class T>
 List<T>::Node::Node(const T& object){
+	mRef = 1;
 	mData = T(object);
 	bTag = true;
 	mNext = NULL;
@@ -91,6 +94,7 @@ List<T>::Node::Node(const T& object){
 
 template<class T>
 List<T>::Node::Node(const Node* link){
+	mRef = 1;
 	mLink = link;
 	bTag = false;
 	mNext = NULL;
@@ -114,6 +118,28 @@ T& List<T>::Node::getData(){
 template<class T>
 Node* List<T>::Node::getLink(){
 	return mLink;
+}
+
+template<class T>
+void List<T>::Node::decRef(){
+	mRef--;
+	if(mRef == 0){
+		~Node();	
+	}
+}
+
+template<class T>
+void List<T>::Node::incRef(){
+	mRef++;
+}
+
+template<class T>
+List<T>::Node::~Node(){
+	if(bTag){
+		mObject.~T();
+	}else{
+		mLink->decRef();
+	}
 }
 
 //===================================================
@@ -268,14 +294,15 @@ void List<T>::pop_front(){
 	Node* inner_start = mStart;
 	mStart = mStart->getNext();
 	mStart->setBack(NULL);
-	delete(inner_start);
+	
+	inner_start->decRef();
 
 	if(mStart == NULL)
 		mFinish = NULL;
 }
 
 template<class T>
-T& List<T>::at(int index) const{
+Node* List<T>::at(int index) const{
 	int i = 0;
 	Node* inner_start = mStart;
 
@@ -287,11 +314,11 @@ T& List<T>::at(int index) const{
 		i++;
 		inner_start = inner_start->getNext();
 	}
-	return inner_start->getObject();
+	return inner_start;
 }
 
 template<class T>
-T& List<T>::operator [](int index) const{
+Node* List<T>::operator [](int index) const{
 	return at(index);
 }
 
@@ -317,6 +344,6 @@ List<T>::~List(){
 	while (mStart != NULL) {
 		Node* inner_start = mStart;
 		mStart = mStart->getNext();
-		delete inner_start;
+		inner_start->decRef();
 	}
 }

@@ -4,12 +4,14 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Sat 06 Dec 2014 08:17:38 AM IRST
+// * Last Modified : Mon 08 Dec 2014 08:46:56 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
 #include "List.h"
+#include "MaxHeap.h"
 #include "Agency.h"
+#include "Request.h"
 
 #include <iostream>
 #include <string>
@@ -20,7 +22,8 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-	List <Agency> agency;
+	List<Agency> agency;
+	MaxHeap<Request> request;
 	while(true){
 		string command;
 		cout << "> ";
@@ -33,7 +36,7 @@ int main(int argc, char* argv[]){
 			int id;
 			string name;
 			
-			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after Add new agency in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "Add new agency" in stream	
 			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
 			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
 			ci >> id >> name;
@@ -45,6 +48,16 @@ int main(int argc, char* argv[]){
 			exit(0);
 		}else if(command.find("List agency") != string::npos){
 			cout << agency << endl;
+		}else if(command.find("List services") != string::npos){
+		}else if(command.find("List services from") != string::npos){
+			string name;
+			
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after List services from" in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
+			ci >> name;
+			
+			cerr << name << endl;
 		}
 	}
 }

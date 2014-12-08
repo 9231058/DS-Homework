@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Sat 06 Dec 2014 10:21:59 PM IRST
+// * Last Modified : Mon 08 Dec 2014 08:34:17 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -84,7 +84,7 @@ public:
 
 template<class T>
 List<T>::Node::Node(const T& object){
-	mObject = T(object);
+	mObject = object;
 	mNext = NULL;
 	mBack = NULL;
 }
