@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Tue 09 Dec 2014 02:24:44 PM IRST
+// * Last Modified : Tue 09 Dec 2014 03:48:48 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -24,10 +24,10 @@ using namespace std;
 int main(int argc, char* argv[]){
 	List<Agency> agencies;
 	GenList<Service> services;
-
+	
 	while(true){
 		string command;
-		cout << "> ";
+		cout << char(27) << "[5;32m" << ">" << char(27) << "[0;0;0m";
 		std::getline(cin, command);
 		
 		istringstream ci(command);
@@ -50,12 +50,18 @@ int main(int argc, char* argv[]){
 			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
 			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
 			ci >> name;
-			
+		
+			cout << char(27) << "[0;36m";
 			services.list(services.find(Service(name)));
+			cout << char(27) << "[0;0;0m";
 		}else if(command.find("List agency") != string::npos){
+			cout << char(27) << "[0;36m";
 			cout << agencies << endl;
+			cout << char(27) << "[0;0;0m";
 		}else if(command.find("List services") != string::npos){
+			cout << char(27) << "[0;36m";
 			services.list();
+			cout << char(27) << "[0;0;0m";
 		}else if(command.find("Add new service") != string::npos){
 			string name;
 
@@ -189,7 +195,9 @@ int main(int argc, char* argv[]){
 
 			cout << agencies[i].getRequest() << endl;
 		}else{
+			cout << char(27) << "[0;31m";
 			cout << "404 Not Found" << endl;
+			cout << char(27) << "[0;0;0m";
 		}
 	}
 }

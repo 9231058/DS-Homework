@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Tue 09 Dec 2014 02:43:30 PM IRST
+// * Last Modified : Tue 09 Dec 2014 03:29:56 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -245,7 +245,6 @@ template<class T>
 void GenList<T>::addChild(Node* parent, const T& object){
 	if(!parent->getLink()){
 		parent->setLink(new Node(object));
-		child->incRef();
 	}else{
 		Node* start = parent->getLink();	
 		while(start->getNext() != NULL){
@@ -261,7 +260,6 @@ template<class T>
 void GenList<T>::addChild(Node* parent, Node* child){
 	if(!parent->getLink()){
 		parent->setLink(child);
-		child->incRef();
 	}else{
 		Node* start = parent->getLink();	
 		while(start->getNext() != NULL){
