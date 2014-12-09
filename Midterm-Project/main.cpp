@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Tue 09 Dec 2014 03:48:48 PM IRST
+// * Last Modified : Tue 09 Dec 2014 07:40:40 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]){
 			ci >> name;
 		
 			cout << char(27) << "[0;36m";
-			services.list(services.find(Service(name)));
+			services.listFrom(services.find(Service(name)));
 			cout << char(27) << "[0;0;0m";
 		}else if(command.find("List agency") != string::npos){
 			cout << char(27) << "[0;36m";

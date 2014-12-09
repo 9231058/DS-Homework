@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Tue 09 Dec 2014 03:29:56 PM IRST
+// * Last Modified : Tue 09 Dec 2014 07:37:11 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -52,6 +52,7 @@ public:
 	Node* find(const T& object) const;
 	void list(Node* first) const;
 	void list() const;
+	void listFrom(Node* first) const;
 	void addChild(Node* parent, const T& object);
 	void addChild(Node* parent, Node* child);
 	void addParent(Node* child, Node* parent);
@@ -239,6 +240,12 @@ void GenList<T>::list(Node* first) const{
 		}
 		start = start->getNext();
 	}
+}
+
+template<class T>
+void GenList<T>::listFrom(Node* first) const{
+	if(first->getLink())
+		list(first->getLink());
 }
 
 template<class T>
