@@ -4,13 +4,26 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Mon 08 Dec 2014 08:54:20 AM IRST
+// * Last Modified : Mon 08 Dec 2014 11:52:18 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
 #include <string>
 
 #include "Service.h"
+
+Service::Service(std::string name){
+	mName = name;
+}
+
+Service::Service(){
+	mName = "";
+}
+
+Service& Service::operator=(const Service& orig){
+	mName = orig.mName;
+	return *this;
+}
 
 std::string Service::getName() const{
 	return mName;
@@ -58,4 +71,13 @@ int Service::getCost() const{
 
 void Service::setCost(int cost){
 	mCost = cost;
+}
+
+bool Service::operator==(const Service& service) const{
+	return (getName() == service.getName());
+}
+
+std::ostream& operator<<(std::ostream& os, const Service& service){
+	os << "Service: " << service.getName();
+	return os;
 }

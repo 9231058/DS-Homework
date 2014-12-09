@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Mon 08 Dec 2014 08:34:17 AM IRST
+// * Last Modified : Tue 09 Dec 2014 06:04:17 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -321,7 +321,7 @@ T& List<T>::at(int index) const{
 	int i = 0;
 	Node* inner_start = mStart;
 
-	if (index >= size) {
+	if (index >= mSize) {
 		throw(new std::invalid_argument("No such index"));
 	}
 

@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Mon 08 Dec 2014 08:23:22 AM IRST
+// * Last Modified : Tue 09 Dec 2014 06:28:02 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -15,332 +15,247 @@
 
 template<class T>
 class GenList{
-private:
-	int mSize;
-	Node* mStart;
-
 public:
-	List();
-	List(const List<T> &orig);
-	List<T>& operator=(const List<T> &orig);
-
-	void push_front(const T& object);
-	void push_front(const Node* link);
-	void pop_front();
-	T& front();
-	T& back();
-	typename List<T>::Iterator begin();
-	typename List<T>::Iterator end();
-	T& at(int index) const;
-	T& operator[](int index) const;
-	int size() const;
-	
-	template<class V> friend std::ostream& operator<<(std::ostream &os, const List<V>& list);
-
-	virtual ~List();
-
 	class Node{
 	public:
 		Node(const T& object);
-		Node(const Node* link);
 
-		Node* getNext();
+		Node* getNext() const;
+		Node* getBack() const;
 		void setNext(Node* next);
-		bool getTag();
-		T& getData();
-		Node* getLink();
+		void setBack(Node* back);
+		const T& getData() const;
+		Node* getLink() const;
+		void setData(const T& object);
+		void setLink(Node* link);
 		void decRef();
 		void incRef();
 
 		virtual ~Node();
 	private:
 		int mRef;
-		bool bTag;	// True = data, False = link
 		T mData;
 		Node* mLink;
 		Node* mNext;
+		Node* mBack;
 	};
 
-	class Iterator {
-	public:
-		Iterator(Node* startNode, Node* start, Node* finish);
-		Iterator(const Iterator &orig);
 
-		T& operator*()const;
-		Iterator& operator++();
-		Iterator operator++(int);
-		Iterator& operator--();
-		Iterator operator--(int);
-		bool operator==(const Iterator &origin);
-		bool operator!=(const Iterator &origin);
+	GenList();
+	GenList(const GenList<T> &orig);
+	GenList<T>& operator=(const GenList<T> &orig);
+	void push_front(const T& object);
+	void pop_front();
+	Node* find(const T& object) const;
+	void list(Node* first) const;
+	void list() const;
+	void addChild(Node* parent, const T& object);
+	void addParent(Node* child, const T& object);
+	void remove(Node* node);
 
-		//virtual ~Iterator();
-	private:
-		Node* mStart;
-		Node* mCurrent;
-		Node* mFinish;
-	};
+	virtual ~GenList();
+
+private:
+	Node* mStart;
+	Node* mFinish;
+
+	Node* find(const T& object, Node* first) const;
 };
 
 //-----------------List<T>::Node-------------------
 
 template<class T>
-List<T>::Node::Node(const T& object){
-	mRef = 1;
-	mData = T(object);
-	bTag = true;
+GenList<T>::Node::Node(const T& object){
+	mRef = 0;
+	mData = object;
 	mNext = NULL;
+	mBack = NULL;
+	mLink = NULL;
 }
 
 template<class T>
-List<T>::Node::Node(const Node* link){
-	mRef = 1;
-	mLink = link;
-	bTag = false;
-	mNext = NULL;
-}
-
-template<class T>
-typename List<T>::Node *List<T>::Node::getNext(){
+typename GenList<T>::Node *GenList<T>::Node::getNext() const{
 	return mNext;
 }
 
 template<class T>
-void List<T>::Node::setNext(Node* next){
+typename GenList<T>::Node *GenList<T>::Node::getBack() const{
+	return mBack;
+}
+
+template<class T>
+void GenList<T>::Node::setNext(Node* next){
+	if(next) next->incRef();
 	mNext = next;
 }
 
 template<class T>
-T& List<T>::Node::getData(){
+void GenList<T>::Node::setBack(Node* back){
+	if(back) back->incRef();
+	mBack = back;
+}
+
+template<class T>
+const T& GenList<T>::Node::getData() const{
 	return mData;
 }
 
 template<class T>
-Node* List<T>::Node::getLink(){
+typename GenList<T>::Node* GenList<T>::Node::getLink() const{
 	return mLink;
 }
 
 template<class T>
-void List<T>::Node::decRef(){
+void GenList<T>::Node::setData(const T& object){
+	mData = object;
+}
+
+template<class T>
+void GenList<T>::Node::setLink(Node* link){
+	link->incRef();
+	mLink = link;
+}
+
+template<class T>
+void GenList<T>::Node::decRef(){
 	mRef--;
 	if(mRef == 0){
-		~Node();	
+		this->~Node();	
 	}
 }
 
 template<class T>
-void List<T>::Node::incRef(){
+void GenList<T>::Node::incRef(){
 	mRef++;
 }
 
 template<class T>
-List<T>::Node::~Node(){
-	if(bTag){
-		mObject.~T();
-	}else{
+GenList<T>::Node::~Node(){
+	mData.~T();
+	if(mLink != NULL){
 		mLink->decRef();
 	}
 }
 
-//===================================================
-//------------------List<T>::Iterator----------------
-
-template<class T>
-List<T>::Iterator::Iterator(typename List<T>::Node* startNode, typename List<T>::Node* start, typename List<T>::Node* finish){
-	mStart = start;
-	mCurrent = startNode;
-	mFinish = finish;
-}
-
-template<class T>
-List<T>::Iterator::Iterator(const Iterator& orig){
-	mFinish = orig.mFinish;
-	mCurrent = orig.mCurrent;
-	mStart = orig.mStart;
-}
-
-template<class T>
-T& List<T>::Iterator::operator *() const{
-	return mCurrent->getObject();
-}
-
-template<class T>
-typename List<T>::Iterator& List<T>::Iterator::operator++(){
-	if(mCurrent->getNext() != NULL){
-		mCurrent = mCurrent->getNext();
-	}else{
-		mCurrent = mStart;
-	}
-	return *this;
-}
-
-template<class T>
-typename List<T>::Iterator List<T>::Iterator::operator ++(int){
-	Iterator old = *this;
-	if(mCurrent->getNext() != NULL){
-		mCurrent = mCurrent->getNext();
-	}else{
-		mCurrent = mStart;
-	}
-	return old;
-}
-
-template<class T>
-typename List<T>::Iterator& List<T>::Iterator::operator--(){
-	if(mCurrent->getBack() != NULL){
-		mCurrent = mCurrent->getBack();
-	}else{
-		mCurrent = mFinish;
-	}
-	return *this;
-}
-
-template<class T>
-typename List<T>::Iterator List<T>::Iterator::operator --(int){
-	Iterator old = *this;
-	if (mCurrent->getBack() != NULL){
-		mCurrent = mCurrent->getBack();
-	} else {
-		mCurrent = mFinish;
-	}
-	return old;
-}
-
-template<class T>
-bool List<T>::Iterator::operator==(const Iterator &origin){
-	return mCurrent == origin.mCurrent;
-}
-
-template<class T>
-bool List<T>::Iterator::operator!=(const Iterator &origin){
-	return mCurrent != origin.mCurrent;
-}
-
 //=======================================================
-//---------------------List<T>---------------------------
+//---------------------GenList<T>------------------------
 
 template<class T>
-List<T>::List(){
+GenList<T>::GenList(){
 	mStart = NULL;
-	mSize = 0;
 }
 
 template<class T>
-List<T>::List(const List<T>& orig){
+GenList<T>::GenList(const GenList<T>& orig){
 	// TODO Implement list copying
 }
 
 template<class T>
-List<T>& List<T>::operator=(const List<T>& orig){
+GenList<T>& GenList<T>::operator=(const GenList<T>& orig){
 	// TODO Implement list assignment
 }
 
 template<class T>
-T& List<T>::front(){
-	// Not yet supported
-}
-
-template<class T>
-T& List<T>::back(){
-	// Not yet supported
-}
-
-template<class T>
-typename List<T>::Iterator List<T>::begin(){
-	// Not yet supported
-}
-
-template<class T>
-typename List<T>::Iterator List<T>::end(){
-	// Not yet supported
-}
-
-template<class T>
-void List<T>::push_front(const T& object){
-	mSize++;
-
+void GenList<T>::push_front(const T& object){
 	if(mStart == NULL){
 		mStart = new Node(object);
+		mFinish = mStart;
 		return;
 	}
 
 	Node* new_node = new Node(object);
 	new_node->setNext(mStart);
+	mStart->setBack(new_node);
 	mStart = new_node;
 }
 
 template<class T>
-void List<T>::push_front(const Node* link){
-	mSize++;
-
-	if(mStart == NULL){
-		mStart = new Node(link);
-		return;
-	}
-
-	Node* new_node = new Node(link);
-	new_node->setNext(mStart);
-	mStart = new_node;
-}
-
-template<class T>
-void List<T>::pop_front(){
+void GenList<T>::pop_front(){
 	if(mStart == NULL){
 		return;
 	}
-
-	mSize--;
 
 	Node* inner_start = mStart;
 	mStart = mStart->getNext();
 	mStart->setBack(NULL);
 	
 	inner_start->decRef();
-
-	if(mStart == NULL)
-		mFinish = NULL;
 }
 
 template<class T>
-Node* List<T>::at(int index) const{
-	int i = 0;
-	Node* inner_start = mStart;
+typename GenList<T>::Node* GenList<T>::find(const T& object) const{
+	return find(object, mStart);	
+}
 
-	if (index >= size) {
-		throw(new std::invalid_argument("No such index"));
+template<class T>
+typename GenList<T>::Node* GenList<T>::find(const T& object, Node* first) const{
+	Node* start = first;
+	while(start != NULL){
+		if(start->getData() == object)
+			return start;
+		if(start->getLink() == NULL || find(object, start->getLink()) == NULL)
+			start = start->getNext();
+		else 
+			return find(object, start->getLink());
+	}
+	return NULL;
+}
+
+template<class T>
+void GenList<T>::list() const{
+	list(mStart);
+}
+
+template<class T>
+void GenList<T>::list(Node* first) const{
+	Node* start = first;
+	while(start != NULL){
+		std::cout << start->getData() << std::endl;
+		if(start->getLink() != NULL){
+			std::cout << ">>>>>" << std::endl;
+			list(start->getLink());
+			std::cout << "<<<<<" << std::endl;
+		}
+		start = start->getNext();
+	}
+}
+
+template<class T>
+void GenList<T>::addChild(Node* parent, const T& object){
+	if(!parent->getLink()){
+		parent->setLink(new Node(object));	
+	}else{
+		Node* start = parent->getLink();	
+		while(start->getNext() != NULL){
+			start = start->getNext();
+		}
+		start->setNext(new Node(object));
+		start->getNext()->setBack(start);
 	}
 
-	while (i < index) {
-		i++;
-		inner_start = inner_start->getNext();
+}
+
+template<class T>
+void GenList<T>::addParent(Node* child, const T& object){
+	push_front(object);
+	Node* parent = mStart;
+	parent->setLink(child);
+}
+
+template<class T>
+void GenList<T>::remove(Node* node){
+	if(node && node->getNext()){
+		node->getNext()->setBack(node->getBack());
+		node->decRef();
 	}
-	return inner_start;
-}
-
-template<class T>
-Node* List<T>::operator [](int index) const{
-	return at(index);
-}
-
-template<class T>
-int List<T>::size() const{
-	return mSize;
-}
-
-template<class V>
-std::ostream& operator<<(std::ostream &os, const List<V>& list){
-	typename List<V>::Node* inner_start = list.mStart;
-	while (inner_start != NULL) {
-		os << "| ";
-		os << inner_start->getObject();
-		os << " |";
-		inner_start = inner_start->getNext();
+	if(node && node->getBack()){
+		node->getBack()->setNext(node->getNext());
+		node->decRef();
 	}
-	return os;
 }
 
 template<class T>
-List<T>::~List(){
+GenList<T>::~GenList(){
 	while (mStart != NULL) {
 		Node* inner_start = mStart;
 		mStart = mStart->getNext();

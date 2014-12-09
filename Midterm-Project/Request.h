@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Mon 08 Dec 2014 08:51:55 AM IRST
+// * Last Modified : Tue 09 Dec 2014 05:20:07 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -22,9 +22,14 @@ class Request{
 		time_t mTime;
 		std::string mUsername;
 	public:
+		Request();
 		Request(const Service& service, const std::string& username);
+		Request(const Request& orig);
+		Request& operator=(const Request& orig);	
 		bool operator<(const Request& r) const;
 		bool operator>(const Request& r) const;
+		bool operator<=(const Request& r) const;
+		bool operator>=(const Request& r) const;
 		bool operator==(const Request& r) const;
 
 		friend std::ostream& operator<<(std::ostream& os, const Request& r);

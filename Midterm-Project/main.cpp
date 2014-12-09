@@ -4,14 +4,14 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Mon 08 Dec 2014 08:46:56 AM IRST
+// * Last Modified : Tue 09 Dec 2014 06:24:23 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
 #include "List.h"
 #include "MaxHeap.h"
 #include "Agency.h"
-#include "Request.h"
+#include "GenList.h"
 
 #include <iostream>
 #include <string>
@@ -22,14 +22,13 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-	List<Agency> agency;
-	MaxHeap<Request> request;
+	List<Agency> agencies;
+	GenList<Service> services;
+
 	while(true){
 		string command;
 		cout << "> ";
 		std::getline(cin, command);
-		
-		cerr << command << endl;
 		
 		istringstream ci(command);
 		if(command.find("Add new agency") != string::npos){
@@ -41,23 +40,145 @@ int main(int argc, char* argv[]){
 			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
 			ci >> id >> name;
 			
-			cerr << id << " " << name << endl;
-
-			agency.push_back(Agency(name, id));
+			agencies.push_back(Agency(name, id));
 		}else if(command.find("Exit") != string::npos){
 			exit(0);
-		}else if(command.find("List agency") != string::npos){
-			cout << agency << endl;
-		}else if(command.find("List services") != string::npos){
 		}else if(command.find("List services from") != string::npos){
 			string name;
 			
-			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after List services from" in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "List services from" in stream	
 			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
 			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
 			ci >> name;
 			
-			cerr << name << endl;
+			services.list(services.find(Service(name)));
+		}else if(command.find("List agency") != string::npos){
+			cout << agencies << endl;
+		}else if(command.find("List services") != string::npos){
+			services.list();
+		}else if(command.find("Add new service") != string::npos){
+			string name;
+
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "Add new service" in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
+			ci >> name;
+			
+			services.push_front(Service(name));
+		}else if(command.find("Add subservice") != string::npos){
+			string parentName;
+			string childName;
+
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "Add subservice" in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
+			
+			ci >> childName;
+
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "to" in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');		
+			
+			ci >> parentName;
+			
+			GenList<Service>::Node* ptr = services.find(Service(parentName));
+			if(ptr == NULL){
+				cout << "Service not found" << endl;
+				continue;
+			}
+
+			
+			services.addChild(ptr, Service(childName));
+		}else if(command.find("Add parent") != string::npos){
+			string parentName;
+			string childName;
+
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "Add parent" in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');		
+			
+			ci >> parentName;
+			
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "to" in stream
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
+
+			ci >> childName;
+
+			GenList<Service>::Node* ptr = services.find(Service(childName));
+			if(ptr == NULL){
+				cout << "Service not found" << endl;
+				continue;
+			}
+
+			services.addParent(ptr, parentName);			
+		}else if(command.find("Delete") != string::npos){
+			string service;
+
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "Delete" in stream	
+		
+			ci >> service;
+
+			GenList<Service>::Node* ptr = services.find(Service(service));
+			if(ptr == NULL){
+				cout << "Service not found" << endl;
+				continue;
+			}
+			
+			services.remove(ptr);
+		}else if(command.find("Request") != string::npos){
+			string service;
+			string agency;
+			string username;
+			
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "Request" in stream
+
+			ci >> service;
+
+			
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "in" in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	
+		
+			ci >> agency;
+
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "by" in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	
+		
+			ci >> username;
+		
+			int i = 0;
+			for(i = 0; i < agencies.size(); i++){
+				if(agencies[i].getName() == agency)
+					break;
+			}
+			if(i == agencies.size()){
+				cout << "Agency not found" << endl;
+				continue;
+			}
+			GenList<Service>::Node* ptr = services.find(Service(service));
+			if(ptr == NULL){
+				cout << "Service not found" << endl;
+				continue;
+			}
+
+			agencies[i].addRequest(Request(ptr->getData(), username));
+		}else if(command.find("Get requests") != string::npos){
+			string agency;
+
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	// Just seek after "Get requests" in stream	
+			ci.ignore(std::numeric_limits<std::streamsize>::max(), ' ');	
+			
+			ci >> agency;
+			
+			int i = 0;
+			for(i = 0; i < agencies.size(); i++){
+				if(agencies[i].getName() == agency)
+					break;
+			}
+			if(i == agencies.size()){
+				cout << "Agency not found" << endl;
+				continue;
+			}
+
+			cout << agencies[i].getRequest() << endl;
+		}else{
+			cout << "404 Not Found" << endl;
 		}
 	}
 }
