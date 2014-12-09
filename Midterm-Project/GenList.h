@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Tue 09 Dec 2014 06:28:02 AM IRST
+// * Last Modified : Tue 09 Dec 2014 10:40:20 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -50,7 +50,7 @@ public:
 	void list(Node* first) const;
 	void list() const;
 	void addChild(Node* parent, const T& object);
-	void addParent(Node* child, const T& object);
+	void addParent(Node* child, Node* parent);
 	void remove(Node* node);
 
 	virtual ~GenList();
@@ -236,9 +236,7 @@ void GenList<T>::addChild(Node* parent, const T& object){
 }
 
 template<class T>
-void GenList<T>::addParent(Node* child, const T& object){
-	push_front(object);
-	Node* parent = mStart;
+void GenList<T>::addParent(Node* child, Node* parent){
 	parent->setLink(child);
 }
 
