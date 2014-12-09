@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Tue 09 Dec 2014 10:40:20 AM IRST
+// * Last Modified : Tue 09 Dec 2014 02:43:30 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -28,9 +28,11 @@ public:
 		Node* getLink() const;
 		void setData(const T& object);
 		void setLink(Node* link);
+		int getRef();
 		void decRef();
 		void incRef();
-
+		void chainRemove();
+		
 		virtual ~Node();
 	private:
 		int mRef;
@@ -46,10 +48,12 @@ public:
 	GenList<T>& operator=(const GenList<T> &orig);
 	void push_front(const T& object);
 	void pop_front();
+
 	Node* find(const T& object) const;
 	void list(Node* first) const;
 	void list() const;
 	void addChild(Node* parent, const T& object);
+	void addChild(Node* parent, Node* child);
 	void addParent(Node* child, Node* parent);
 	void remove(Node* node);
 
@@ -85,13 +89,11 @@ typename GenList<T>::Node *GenList<T>::Node::getBack() const{
 
 template<class T>
 void GenList<T>::Node::setNext(Node* next){
-	if(next) next->incRef();
 	mNext = next;
 }
 
 template<class T>
 void GenList<T>::Node::setBack(Node* back){
-	if(back) back->incRef();
 	mBack = back;
 }
 
@@ -117,10 +119,15 @@ void GenList<T>::Node::setLink(Node* link){
 }
 
 template<class T>
+int GenList<T>::Node::getRef(){
+	return mRef;
+}
+
+template<class T>
 void GenList<T>::Node::decRef(){
 	mRef--;
 	if(mRef == 0){
-		this->~Node();	
+		this->chainRemove();
 	}
 }
 
@@ -130,12 +137,25 @@ void GenList<T>::Node::incRef(){
 }
 
 template<class T>
+void GenList<T>::Node::chainRemove(){
+	Node* node = this->getNext();
+	Node* temp;
+	while(node != NULL){
+		temp = node;
+		node = node->getNext();
+		delete temp;
+	}
+	this->~Node();
+}
+
+
+template<class T>
 GenList<T>::Node::~Node(){
-	mData.~T();
 	if(mLink != NULL){
 		mLink->decRef();
 	}
 }
+
 
 //=======================================================
 //---------------------GenList<T>------------------------
@@ -179,8 +199,9 @@ void GenList<T>::pop_front(){
 	mStart = mStart->getNext();
 	mStart->setBack(NULL);
 	
-	inner_start->decRef();
+	delete inner_start;
 }
+
 
 template<class T>
 typename GenList<T>::Node* GenList<T>::find(const T& object) const{
@@ -210,7 +231,7 @@ template<class T>
 void GenList<T>::list(Node* first) const{
 	Node* start = first;
 	while(start != NULL){
-		std::cout << start->getData() << std::endl;
+		std::cout << start->getData() << " " << start->getRef() << std::endl;
 		if(start->getLink() != NULL){
 			std::cout << ">>>>>" << std::endl;
 			list(start->getLink());
@@ -223,7 +244,8 @@ void GenList<T>::list(Node* first) const{
 template<class T>
 void GenList<T>::addChild(Node* parent, const T& object){
 	if(!parent->getLink()){
-		parent->setLink(new Node(object));	
+		parent->setLink(new Node(object));
+		child->incRef();
 	}else{
 		Node* start = parent->getLink();	
 		while(start->getNext() != NULL){
@@ -236,20 +258,38 @@ void GenList<T>::addChild(Node* parent, const T& object){
 }
 
 template<class T>
+void GenList<T>::addChild(Node* parent, Node* child){
+	if(!parent->getLink()){
+		parent->setLink(child);
+		child->incRef();
+	}else{
+		Node* start = parent->getLink();	
+		while(start->getNext() != NULL){
+			start = start->getNext();
+		}
+		start->setNext(child);
+		start->getNext()->setBack(start);
+	}
+}
+
+template<class T>
 void GenList<T>::addParent(Node* child, Node* parent){
 	parent->setLink(child);
 }
 
 template<class T>
 void GenList<T>::remove(Node* node){
+	if(mStart == node)
+		mStart = node->getNext();
+	if(mFinish == node)
+		mFinish = node->getBack();
 	if(node && node->getNext()){
 		node->getNext()->setBack(node->getBack());
-		node->decRef();
 	}
 	if(node && node->getBack()){
 		node->getBack()->setNext(node->getNext());
-		node->decRef();
 	}
+	delete node;
 }
 
 template<class T>
@@ -257,6 +297,6 @@ GenList<T>::~GenList(){
 	while (mStart != NULL) {
 		Node* inner_start = mStart;
 		mStart = mStart->getNext();
-		inner_start->decRef();
+		delete inner_start;
 	}
 }

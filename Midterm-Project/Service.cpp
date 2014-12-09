@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Mon 08 Dec 2014 11:52:18 PM IRST
+// * Last Modified : Tue 09 Dec 2014 02:34:32 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -75,6 +75,9 @@ void Service::setCost(int cost){
 
 bool Service::operator==(const Service& service) const{
 	return (getName() == service.getName());
+}
+
+Service::~Service(){
 }
 
 std::ostream& operator<<(std::ostream& os, const Service& service){

@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Mon 08 Dec 2014 11:50:53 PM IRST
+// * Last Modified : Tue 09 Dec 2014 01:44:23 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -40,5 +40,6 @@ class Service{
 		bool operator==(const Service& service) const;
 		
 		friend std::ostream& operator<<(std::ostream& os, const Service& service);
-
+		
+		virtual ~Service();
 };

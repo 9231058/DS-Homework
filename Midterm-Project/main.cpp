@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Tue 09 Dec 2014 10:39:51 AM IRST
+// * Last Modified : Tue 09 Dec 2014 02:24:44 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -79,14 +79,19 @@ int main(int argc, char* argv[]){
 			
 			ci >> parentName;
 			
-			GenList<Service>::Node* ptr = services.find(Service(parentName));
-			if(ptr == NULL){
+			GenList<Service>::Node* ptr1 = services.find(Service(parentName));
+			if(ptr1 == NULL){
 				cout << "Service not found" << endl;
 				continue;
 			}
 
+			GenList<Service>::Node* ptr2 = services.find(Service(childName));
+			if(ptr2 == NULL){
+				services.addChild(ptr1, Service(childName));
+			}else{
+				services.addChild(ptr1, ptr2); 
+			}
 			
-			services.addChild(ptr, Service(childName));
 		}else if(command.find("Add parent") != string::npos){
 			string parentName;
 			string childName;
