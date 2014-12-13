@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 13-12-2014
 //
-// * Last Modified : Sat 13 Dec 2014 11:36:46 AM IRST
+// * Last Modified : Sat 13 Dec 2014 12:47:05 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -29,7 +29,7 @@ void BFS(int root){
 
 		cout << start + 1 << endl;
 
-		for(int i = 0; i < v[start].size(); i++){
+		for(unsigned int i = 0; i < v[start].size(); i++){
 			if(color[v[start][i]] == 0){
 				color[v[start][i]] = 1;
 				Q.push(v[start][i]);
@@ -48,5 +48,11 @@ int main(int argc, char* argv[]){
 		v[v1 - 1].push_back(v2 - 1);
 		v[v2 - 1].push_back(v1 - 1);
 	}
-	BFS(0);
+	for(int i = 0; i < n; i++){
+		if(color[i] == 0){
+			cout << char(27) << "[0;" << 31 + (i % 10) << "m";
+			BFS(i);
+		}
+	}
+	cout << char(27) << "[0;0;0m";
 }
