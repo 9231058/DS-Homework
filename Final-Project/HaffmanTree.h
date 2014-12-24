@@ -1,16 +1,23 @@
-// In The Name Of God
-// ========================================
-// * File Name : HaffmanTree.h
-// 
-// * Creation Date : 12-12-2014
-//
-// * Last Modified : Fri 12 Dec 2014 10:18:53 PM IRST
-//
-// * Created By : Parham Alvani (parham.alvani@gmail.com)
-// =======================================
-class HaffmanTree{
+/*
+ * In The Name Of God
+ * ========================================
+ * [] File Name : HaffmanTree.h
+ *
+ * [] Creation Date : 24-12-2014
+ *
+ * [] Last Modified : Wed 24 Dec 2014 11:31:44 PM IRST
+ *
+ * [] Created By : Parham Alvani (parham.alvani@gmail.com)
+ * =======================================
+*/
+#include "MaxHeap.h"
+#include "Nodetype.h"
+
+class HaffmanTree {
 	private:
-		Nodetype* root;
+		Nodetype* mRoot;
+		
+		void makeCode(int code, Nodetype* node);
 	public:
-		HaffmanTree();
+		HaffmanTree(int n, MaxHeap<Nodetype*> &pq);
 };

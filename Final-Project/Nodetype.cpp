@@ -1,54 +1,66 @@
-// In The Name Of God
-// ========================================
-// * File Name : Nodetype.cpp
-// 
-// * Creation Date : 12-12-2014
-//
-// * Last Modified : Fri 12 Dec 2014 09:57:04 PM IRST
-//
-// * Created By : Parham Alvani (parham.alvani@gmail.com)
-// =======================================
+/*
+ * In The Name Of God
+ * ========================================
+ * [] File Name : Nodetype.cpp
+ *
+ * [] Creation Date : 24-12-2014
+ *
+ * [] Last Modified : Wed 24 Dec 2014 11:36:11 PM IRST
+ *
+ * [] Created By : Parham Alvani (parham.alvani@gmail.com)
+ * =======================================
+*/
 #include "Nodetype.h"
 
-Nodetype::Nodetype(){
+Nodetype::Nodetype()
+{
 	mFrequency = 0;
-
+	mCodeSize = 0;
 }
 
-Nodetype::Nodetype(char symbol, int frequency){
+Nodetype::Nodetype(char symbol, int frequency)
+{
 	mSymbol = symbol;
 	mFrequency = frequency;
 }
 
-void Nodetype::setSymbol(char symbol){
+void Nodetype::setSymbol(char symbol)
+{
 	mSymbol = symbol;
 }
 	
-char Nodetype::getSymbol(){
+char Nodetype::getSymbol()
+{
 	return mSymbol;
 }
 	
-void Nodetype::setFrequency(int frequency){
+void Nodetype::setFrequency(int frequency)
+{
 	mFrequency = frequency;
 }
 	
-int Nodetype::getFrequency(){
+int Nodetype::getFrequency()
+{
 	return mFrequency;
 }
 
-void Nodetype::setLeft(Nodetype* left){
+void Nodetype::setLeft(Nodetype* left)
+{
 	mLeft = left;
 }
 
-Nodetype* Nodetype::getLeft(){
+Nodetype* Nodetype::getLeft()
+{
 	return mLeft;
 }
 
-void Nodetype::setRight(Nodetype* right){
+void Nodetype::setRight(Nodetype* right)
+{
 	mRight = right;
 }
 
-Nodetype* Nodetype::getRight(){
+Nodetype* Nodetype::getRight()
+{
 	return mRight;
 }
 

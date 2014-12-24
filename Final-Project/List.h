@@ -1,13 +1,15 @@
-// In The Name Of God
-// ========================================
-// * File Name : List.h
-// 
-// * Creation Date : 05-12-2014
-//
-// * Last Modified : Fri 12 Dec 2014 10:47:18 PM IRST
-//
-// * Created By : Parham Alvani (parham.alvani@gmail.com)
-// =======================================
+/*
+ * In The Name Of God
+ * ========================================
+ * [] File Name : List.h
+ *
+ * [] Creation Date : 24-12-2014
+ *
+ * [] Last Modified : Wed 24 Dec 2014 11:06:28 PM IRST
+ *
+ * [] Created By : Parham Alvani (parham.alvani@gmail.com)
+ * =======================================
+*/
 #pragma once
 
 #include <stdexcept>
