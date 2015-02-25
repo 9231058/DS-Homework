@@ -5,27 +5,61 @@
  *
  * [] Creation Date : 25-02-2015
  *
- * [] Last Modified : Wed 25 Feb 2015 10:26:50 AM IRST
+ * [] Last Modified : Wed 25 Feb 2015 08:28:57 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
 */
-static int S[1024];
-static int head;
+#include <stdlib.h>
 
-void push(int val)
+#include "stack.h"
+
+struct stack *stack_new(void)
 {
-	if (head < 1024) {
-		S[head] = val;
-		head++;
-	}
+	struct stack *s;
+
+	s = malloc(sizeof(struct stack));
+	s->data = NULL;
+	s->next = NULL;
+	return s;
 }
 
-int pop(void)
+void stack_push(struct stack *s, const void *val)
 {
-	if (head > 0) {
-		head--;
-		return S[head];
+	struct stack *new;
+	
+	new = malloc(sizeof(struct stack));
+	new->data = NULL;
+	new->next = NULL;
+
+	while (s->next)
+		s = s->next;
+	s->data = val;
+	s->next = new;
+}
+
+void *stack_pick(struct stack *s)
+{
+	return (void *) s->data;
+}
+
+struct stack *stack_pop(struct stack *s)
+{
+	struct stack *old;
+	
+	old = s->next;
+	free(s);
+	return old;
+}
+
+void stack_delete(struct stack *s)
+{
+	struct stack *old;
+
+	while (s->next) {
+		old = s->next;
+		free(s);
+		s = old;
 	}
-	return -1;
+	free(s);
 }

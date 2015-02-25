@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 25-02-2015
  *
- * [] Last Modified : Wed 25 Feb 2015 10:26:36 AM IRST
+ * [] Last Modified : Wed 25 Feb 2015 08:27:31 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -17,9 +17,17 @@
 int main(int argc, char *argv[])
 {
 	int i = 0;
+	struct stack *s;
+	
+	s = stack_new();
 	
 	for (i = 0; i < 10; i++)
-		push(i);
-	for (i = 0; i < 10; i++)
-		printf("%d\n", pop());
+		stack_push(s, &i);
+	
+	for (i = 0; i < 10; i++) {
+		printf("%d\n", *(int *)stack_pick(s));
+		s = stack_pop(s);
+	}
+
+	stack_delete(s);
 }

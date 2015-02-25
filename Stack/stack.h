@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 25-02-2015
  *
- * [] Last Modified : Wed 25 Feb 2015 10:18:08 AM IRST
+ * [] Last Modified : Wed 25 Feb 2015 08:29:10 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -13,7 +13,15 @@
 #ifndef STACK_H
 #define STACK_H
 
-void push(int val);
-int pop(void);
+struct stack {
+	const void *data;
+	struct stack *next;
+};
+
+struct stack *stack_new(void);
+void stack_push(struct stack *s, const void *val);
+struct stack *stack_pop(struct stack *s);
+void *stack_pick(struct stack *s);
+void stack_delete(struct stack *s);
 
 #endif
