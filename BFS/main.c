@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 16-03-2015
  *
- * [] Last Modified : Tue 17 Mar 2015 12:31:39 AM IRST
+ * [] Last Modified : Tue 17 Mar 2015 12:34:36 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -41,6 +41,7 @@ void BFS(int root, int **const V, int *color, int n)
 		}
 		color[start] = 2;
 	}
+	free(Q);
 }
 
 int main(int argc, char* argv[])
@@ -58,7 +59,7 @@ int main(int argc, char* argv[])
 		V[i][0] = 0;
 	}
 	
-	color = malloc(n * sizeof(int));
+	color = calloc(sizeof(int), n);
 	
 	for (i = 0; i < m; i++) {
 		int v1, v2;
