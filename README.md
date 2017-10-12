@@ -1,4 +1,5 @@
-DS-Homework
-===========
+# DS-Homework
+> Fall 2014 - BSc - Amirkabir University of Technology
 
-Dr.Mosavi Data Structures homeworks
+## Introduction
+Dr.Mosavi Data Structures homework that implemented in C/C++.
